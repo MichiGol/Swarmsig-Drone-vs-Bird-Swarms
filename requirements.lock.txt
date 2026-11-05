@@ -1,0 +1,18 @@
+# Exakte Versionen, mit denen die Tests am 2026-10-11 grün liefen (Python 3.12.10, Windows 11).
+# Abschnitt 10.6 verlangt eine echte Sperrdatei (uv lock / pip-tools); diese Liste ist der Ausgangspunkt.
+numpy==2.4.5
+scipy==1.17.1
+pandas==3.0.3
+pyarrow==24.0.0
+pydantic==2.13.4
+pydantic_core==2.46.4
+PyYAML==6.0.3
+joblib==1.5.3
+pytest==9.1.1
+# Ergänzt am 2026-11-04: in derselben Umgebung installiert, die Tests laufen damit grün.
+numba==0.68.0
+itur==0.4.0
+matplotlib==3.10.9
+h5py==3.16.0
+markdown==3.10.3
+pypdf==6.16.1

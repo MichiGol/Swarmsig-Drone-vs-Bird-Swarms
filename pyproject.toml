@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swarmsig"
+version = "0.1.0"
+description = "Kollektive Fingerabdrücke: Vogelschwärme vs. Drohnengruppen im Flughafenumfeld (Monte-Carlo-Studie, siehe architektur-new.md)"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "pyarrow>=14",
+    "pydantic>=2.5",
+    "PyYAML>=6.0",
+    "joblib>=1.3",
+    "itur>=0.4",       # ITU-R P.838 Regendämpfung im Radarmodell (Teil 2)
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "hypothesis>=6", "ruff", "mypy"]
+# Numba-Kerne sind für später vorgesehen (Abschnitt 10.1); der Kern läuft vektorisiert ohne Numba.
+fast = ["numba>=0.59"]
+analysis = ["matplotlib", "statsmodels", "scikit-learn", "SALib", "pygam", "h5py"]  # h5py: Schornsteinsegler (O19, O20)
+paper = ["markdown", "pypdf"]  # reports/paper/build_pdf.py (braucht außerdem Chrome oder Edge)
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = [
+    "slow: lange Tests (nicht im Standardlauf; explizit mit `pytest -m slow` starten)",
+]
+addopts = "-m \"not slow\""
+
+[tool.ruff]
+line-length = 100
