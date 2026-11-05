@@ -1,0 +1,20 @@
+# Winziger Rauchtest der gesamten Kette (Sekunden, keine wissenschaftliche Aussage).
+base: base.yaml
+
+experiment:
+  id: smoke
+  n_design_points: 2
+  bird_classes: {S: [B1, B3], M: [B1], L: [B1]}
+  controls: [K0]
+
+scenario:
+  N_bands:
+    S: {values: [30], weight: 1.0}
+    M: {values: [1000], weight: 0.0}
+    L: {values: [10000], weight: 0.0}
+  T_obs_s: 1.0
+  T_burn_s: 2.0
+
+dynamics:
+  dt_s: 0.01
+  auto_reduce_dt: false

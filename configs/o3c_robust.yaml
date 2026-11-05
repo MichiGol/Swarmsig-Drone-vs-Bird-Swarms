@@ -1,0 +1,12 @@
+# O3c-1: Simulation unter den robusten Kenngrößen aus O3b (Q primär, L und RL ergänzend).
+# Dieselben Designpunkte und Zufallszahlen wie P3_wind_v1 (mit Wind, K0). A7, M und A12 müssen
+# P3_wind_v1 daher exakt reproduzieren. Neu sind nur die Abzüge L, Q, RL und ihre Bias-Tabelle.
+base: p3_wind.yaml
+
+experiment:
+  id: O3c_robust_v1
+  controls: [K0]
+
+observables:
+  mode_removal: [A7, M, A12, L, Q, RL]
+  nn_bias_table: data/processed/nn_bias_table_robust.parquet   # scripts/build_nn_bias_table.py (O3c-1)

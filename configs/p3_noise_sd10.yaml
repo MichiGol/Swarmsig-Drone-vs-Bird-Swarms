@@ -1,0 +1,15 @@
+# P3-Nachtrag „Drohnenrauschen mit Wind“ (Entscheidung Projektleitung 2026-10-11): wie die
+# P1-Sensitivität, aber mit realem Herbstwind und gepaarter windstiller Kontrolle (K-Calm).
+# Dieselben Designpunkte und Zufallszahlen wie P3_wind_v1 (CRN); Vögel aus dem Hauptlauf; nur N = 50.
+# Vorregistrierung: reports/P3_noise_prereg.md
+base: p3_wind.yaml
+
+experiment:
+  id: P3_noise_sd10
+  controls: [K0, K-Calm]            # D (mit Wind und windstill, gepaart)
+  skip_birds: true                  # D (Vögel unverändert, aus P3_wind_v1)
+  only_N: [50]                      # D (konfirmatorische Gruppengröße; Budget)
+  sweep_value: 1.0                  # σ_d dieses Laufs (Kennzeichnung)
+
+drones:
+  sigma_d: 1.0                      # A (Sensitivität; Basis 0,1)

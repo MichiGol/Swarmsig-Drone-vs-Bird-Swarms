@@ -1,0 +1,12 @@
+# P1 (Go/No-go): idealer Sensor, kein Wind, B1/B3 gegen D1, D2, D2-c, D3 (3.2, 10.4).
+# Vor dem Start: reports/P1_prereg.md festschreiben, N0-Biastabelle für T_nn erzeugen,
+# Vogelmodelle kalibrieren (Platzhalter in base.yaml ersetzen).
+base: base.yaml
+
+experiment:
+  id: P1_ideal_v1
+  seed: 20261011
+  n_design_points: 2000
+  bird_classes: {S: [B1, B3], M: [B1], L: [B1]}
+  drone_classes: [D1, D2, D2c, D3]
+  controls: [K0]

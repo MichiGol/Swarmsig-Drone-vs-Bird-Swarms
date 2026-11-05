@@ -1,0 +1,10 @@
+# O5: Formationsdrohnen DF (keine Nachbarkopplung), dieselben 900 Designpunkte wie P3_wind_v1 / O3c_robust_v1
+# (mit Herbstwind, K0). Vögel und D1–D3 stammen aus O3c_robust_v1 (gleiche Seeds, CRN).
+# Positionierung wie im P3-Hauptlauf (eigener Zustand exakt). Vorregistrierung: reports/O5_prereg.md
+base: o3c_robust.yaml
+
+experiment:
+  id: O5_df_base
+  drone_classes: [DF]
+  controls: [K0]
+  skip_birds: true

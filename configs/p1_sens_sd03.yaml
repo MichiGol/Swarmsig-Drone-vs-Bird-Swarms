@@ -1,0 +1,11 @@
+# Sensitivität des Drohnen-Prozessrauschens (σ_d = 0,3) mit gemeinsamen Zufallszahlen:
+# gleicher Seed und gleiche Designpunkte wie P1_confirm_v1, nur Drohnen neu gerechnet.
+base: p1_confirm.yaml
+
+experiment:
+  id: P1_sens_sigma_d_0.3
+  skip_birds: true                  # Vögel stammen aus P1_confirm_v1 (identische Ströme)
+  sweep_value: 0.3
+
+drones:
+  sigma_d: 0.3                      # A (Sensitivität; Basis 0,1)

@@ -1,0 +1,7 @@
+# O5-Diagnose (nicht vorregistriert): DF wie o5_df_base, aber ohne Wind (K-Calm, gleiche Designpunkte und Seeds).
+# Frage: Ist die Kopplung der Formationsdrohnen windbedingt?
+base: o5_df_base.yaml
+
+experiment:
+  id: O5_df_calm
+  controls: [K-Calm]

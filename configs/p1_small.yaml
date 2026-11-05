@@ -1,0 +1,37 @@
+# P1 für kleine Schwärme (Entscheidung 2026-10-11): idealer Sensor, kein Wind,
+# Gruppengrößen 10–300 mit Schwerpunkt auf kleinen Gruppen, Rechenbudget ≤ 1 h.
+# Vögel: B1 oder B3 je Designpunkt (stratifiziert), Drohnen: D1, D2 (Reichweite lokal/knn
+# gezogen), D3. Weggelassen gegenüber dem Dokument: Bänder M/L, D2-c, Radar, Wind (P2–P4).
+base: base.yaml
+
+experiment:
+  id: P1_small_v1
+  seed: 20261012                    # D
+  bird_classes: {XS: [B1, B3], S: [B1, B3], M: [B1], L: [B1]}   # D (XS: N < 30, neu)
+  drone_classes: [D1, D2, D3]       # D (D2-c weggelassen, Budget)
+  controls: [K0]
+
+scenario:
+  # D (2026-10-11, nach Pilot): Vogelmodell hält bis N = 50 zusammen (kalibriert bei N = 50);
+  # N = 100 als Grenzfall mit Zerfallsmerkmal; N = 200/300 entfallen (Zerfall, Rechenbudget).
+  N_plan: {10: 300, 20: 300, 30: 300, 50: 300, 100: 150}
+  T_burn_s: 30                      # A, wird im Pilotlauf geprüft (Dokument: 60 s)
+
+drones:
+  max_neighbors: 10                 # D (Pilot 2026-10-11: ohne Begrenzung Stauchung bei N = 300; SwarmLab max_neig = 10)
+  D2:
+    range_mode: local               # D (Pilot: Variante knn kollabiert; nur Olfati-Saber r = 1,2·d)
+
+birds:
+  B1:
+    calibration_posterior: data/processed/b1_posterior.parquet   # K (scripts/calibrate_bird_model.py)
+  B3:
+    calibration_posterior: data/processed/b3_posterior.parquet   # K
+
+dynamics:
+  backend: numba                    # D (kompilierte Kerne, gegen NumPy-Referenz getestet)
+  dt_bird_s: null                   # wird aus dem Pilotlauf gesetzt (Jacobi-Definition, 4.9)
+  dt_drone_s: null                  # wird aus dem Pilotlauf gesetzt
+
+observables:
+  nn_bias_table: data/processed/nn_bias_table_small.parquet   # erzeugt im Pilot

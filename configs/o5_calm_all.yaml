@@ -1,0 +1,7 @@
+# O5-Diagnose (nicht vorregistriert): alle Klassen ohne Wind (K-Calm) unter Q/L/RL, gleiche Designpunkte und Seeds
+# wie O3c_robust_v1. Frage: Welcher Teil der Kopplung ist windbedingt, welcher kommt aus der Wechselwirkung?
+base: o3c_robust.yaml
+
+experiment:
+  id: O5_calm_all
+  controls: [K-Calm]

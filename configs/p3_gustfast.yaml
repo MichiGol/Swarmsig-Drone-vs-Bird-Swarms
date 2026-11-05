@@ -1,0 +1,16 @@
+# P3-Variante „schnelle Böenregelung“ (Sensitivität, Entscheidung 2026-10-11): Die Drohnen schätzen
+# den Wind mit τ_est,D ~ U[0,1; 0,5] s (Größenordnung der Geschwindigkeitsregelung τ_v) statt
+# U[1; 10] s (9.3). Damit wirken nur noch Böen kürzer als ≈ τ_est voll durch, wie bei einer
+# GPS-Geschwindigkeitsregelung mit Störgrößenunterdrückung. Dieselben Designpunkte und Zufallszahlen
+# wie P3_wind_v1 (CRN); Vögel kommen aus dem Hauptlauf; nur N = 50.
+base: p3_wind.yaml
+
+experiment:
+  id: P3_gustfast_v1
+  controls: [K0]
+  skip_birds: true                  # D (Vögel unverändert, aus P3_wind_v1)
+  only_N: [50]                      # D (Budget; N = 50 ist die konfirmatorische Gruppengröße)
+  sweep_value: 0.3                  # Mitte des τ_est,D-Priors (Kennzeichnung)
+
+drones:
+  tau_est_s: {dist: uniform, low: 0.1, high: 0.5}   # A (Variante; Hauptlauf: U[1; 10] s)

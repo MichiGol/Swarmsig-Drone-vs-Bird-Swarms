@@ -1,0 +1,13 @@
+Abzug,Vergleich,Fenster Drohnen/Tauben,Flüge Drohnen/Tauben,AUC′ = P(T_Drohne > T_Taube),Lesart
+A7,"primär: alle Kontrollflüge, 2D, q = 5",217/39,4/16,"0.97 [0.93, 1.00]",Drohnen stärker gekoppelt
+A7,nur kleine Taubenschwärme (7–10),217/27,4/12,"0.97 [0.92, 1.00]",Drohnen stärker gekoppelt
+A7,nur große Taubenschwärme (30–34),217/12,4/4,"0.99 [0.96, 1.00]",Drohnen stärker gekoppelt
+A7,Sensitivität q = 1,224/39,4/15,"0.96 [0.90, 1.00]",Drohnen stärker gekoppelt
+A7,Sensitivität Drohnen 3D (q = 5),217/39,4/16,"0.98 [0.95, 1.00]",Drohnen stärker gekoppelt
+A7,"Sensitivität Falkenflüge (≥ 50 m), q = 5",217/36,4/19,"0.98 [0.95, 1.00]",Drohnen stärker gekoppelt
+M,"primär: alle Kontrollflüge, 2D, q = 5",217/39,4/16,"0.69 [0.37, 0.89]",kein belastbarer Unterschied
+M,nur kleine Taubenschwärme (7–10),217/27,4/12,"0.67 [0.35, 0.87]",kein belastbarer Unterschied
+M,nur große Taubenschwärme (30–34),217/12,4/4,"0.74 [0.40, 0.96]",kein belastbarer Unterschied
+M,Sensitivität q = 1,224/39,4/15,"0.56 [0.27, 0.75]",kein belastbarer Unterschied
+M,Sensitivität Drohnen 3D (q = 5),217/39,4/16,"0.70 [0.40, 0.89]",kein belastbarer Unterschied
+M,"Sensitivität Falkenflüge (≥ 50 m), q = 5",217/36,4/19,"0.76 [0.52, 0.93]",schwache Tendenz zu Drohnen

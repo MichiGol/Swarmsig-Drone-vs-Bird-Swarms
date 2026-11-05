@@ -1,0 +1,19 @@
+# P3-Nachtrag „Positionierung: RTK gegen Standard-GPS“ (Entscheidung Projektleitung 2026-10-11).
+# Profil RTK-GPS; eigener GPS-Fehler im Regler: nein (Referenz, Modell aus 4.7).
+# Dieselben Designpunkte und Zufallszahlen wie P3_wind_v1 (CRN), mit Wind; Vögel aus dem Hauptlauf;
+# nur N = 50. Vorregistrierung: reports/P3_gps_prereg.md
+base: p3_wind.yaml
+
+experiment:
+  id: P3_pos_rtk_ref
+  controls: [K0]
+  skip_birds: true                  # D (Vögel unverändert, aus P3_wind_v1)
+  only_N: [50]                      # D (konfirmatorische Gruppengröße; Budget)
+  sweep_value: 0.0                  # 1 = eigener GPS-Fehler im Regler, 0 = Referenz
+
+realism:
+  sigma_g_m: {dist: uniform, low: 0.02, high: 0.06}      # L (Ladino & Sama 2024: RTK 1–6 cm; Mavic 3E RTK 2,9–5,2 cm RMS)
+  sigma_gv_mps: {dist: uniform, low: 0.02, high: 0.06}   # L/A (Geschwindigkeitsfehler ≈ 0,05 m/s, Doppler-Messung)
+  tau_g_s: {dist: uniform, low: 1, high: 10}             # A (RTK-Restfehler: Rauschen, Mehrwege, Sekunden)
+  gps_shared_frac: {dist: uniform, low: 0.0, high: 0.5}  # A (Restfehler überwiegend empfängerspezifisch)
+  own_state_noise: false            # D (Erweiterung 2026-10-11)

@@ -1,0 +1,162 @@
+# Grundfall aller Parameter (Abschnitt 10.2, 10.4).
+# Herkunft jeder Zahl (Regel 2): L = Literatur, A = ANNAHME (wird variiert), K = Kalibrierung (4.8),
+# D = Design-Entscheidung. „Platzhalter“ = ANNAHME bis zur Kalibrierung bzw. Klärung des offenen Punkts.
+# Einheiten SI (Regel 3); Winkel in rad.
+
+experiment:
+  id: base
+  seed: 20261011                    # D
+  n_design_points: 2000             # D (10.4)
+  bird_classes: {S: [B1, B3], M: [B1], L: [B1]}   # D (9.1)
+  drone_classes: [D1, D2, D2c, D3]  # D (P1, 3.2)
+  controls: [K0]                    # D (P1: kein Radar, kein Wind)
+  record_curves: false              # D
+
+scenario:
+  N_bands:                          # A/D (9.1): Schwerpunkt auf dem flughafenrelevanten Bereich
+    S: {values: [30, 50, 100, 200, 300], weight: 0.6}
+    M: {values: [1000, 3000], weight: 0.3}
+    L: {values: [10000, 30000], weight: 0.1}
+  hypothetical_N_above: 1000        # D (9.1)
+  R_m: {dist: uniform, low: 500, high: 5000}            # D (9.1)
+  z0_m: {dist: uniform, low: 30, high: 300}             # A (offener Punkt 18)
+  azimuth_rad: {dist: uniform, low: 0.0, high: 6.283185307179586}   # D
+  flight_mode: {dist: choice, values: [transit, loiter], weights: [0.5, 0.5]}   # A
+  heading_rad: {dist: uniform, low: 0.0, high: 6.283185307179586}   # D (bestimmt theta_LOS)
+  circle_radius_m: {dist: uniform, low: 50, high: 300}  # A
+  T_obs_s: 10                       # L (Kamerafenster ≈ 10–12 s), D
+  T_burn_s: 60                      # A (Stationarität prüfen)
+  s0_mps:                           # Soll-Speed; Drohnen übernehmen den Wert des Designpunkts (9.3, D)
+    B1: {dist: uniform, low: 9, high: 13}     # L (Starendaten ≈ 10–12 m/s)
+    B3: {dist: uniform, low: 10, high: 18}    # A (Tauben/Möwen; Literatur prüfen)
+
+site:
+  h_r_m: 10                         # D (6.2.1 Grundfall Masthöhe)
+
+dynamics:
+  dt_s: 0.005                       # D (4.9 Startwert)
+  dt_allowed_s: [0.01, 0.005, 0.0025, 0.002, 0.001]     # D (4.9: Vielfache passend zu 10/20/50 Hz)
+  dt_safety: 0.1                    # D (4.9: Δt ≤ 0,1/ρ_max)
+  auto_reduce_dt: true              # D (4.9: verkleinern, falls die Regel es verlangt)
+  u_q_marginal_mps: 2.0             # A Platzhalter: 99,9-%-Quantil von |s − s0| bis zum Pilotlauf
+  stationarity:
+    sample_interval_s: 1.0          # D
+    window_fraction: 0.2            # D (4.9: letzte 20 % der Einschwingzeit)
+    alpha: 0.05                     # A
+
+init:
+  aspect: [1.0, 1.0, 0.5]           # A (Halbachsenverhältnis: Flugrichtung, quer, vertikal)
+  speed_noise_rel: 0.05             # A (Anfangsrauschen relativ zu s0)
+
+nav:
+  kappa_n_per_s: 0.5                # A (9.2: klein, Kurs wird gehalten)
+  kappa_z_per_s2: 0.05              # A (9.2: klein, Höhe wird gehalten)
+
+birds:
+  B1:                               # Star, große Schwärme (4.2)
+    neighborhood: topological       # L (Ballerini 2008)
+    n_c: {dist: choice, values: [6, 7, 8]}   # L (Ballerini 2008)
+    speed_control: marginal         # D (4.2; Form u³/u*² ist Näherung, offener Punkt 1)
+    J_per_s: 4.0                    # K, Platzhalter
+    sigma: 2.0                      # K, Platzhalter [m/s^(3/2)]
+    kappa_s_per_s: 2.0              # K, Platzhalter
+    u_star_mps: 1.0                 # K, Platzhalter
+    beta_mps2: 1.0                  # K, Platzhalter
+    r0_m: 1.0                       # K, Platzhalter (Größenordnung d_nn Stare, offener Punkt 3)
+    r_w_m: 0.5                      # K, Platzhalter
+    r_hc_m: 0.2                     # A (9.2)
+    c_comp: {dist: uniform, low: 0.0, high: 0.5}     # A (offener Punkt 16)
+    tau_est_s: {dist: uniform, low: 2, high: 10}     # A
+  B3:                               # Kleinschwärme: Tauben, Möwen, Krähen (4.4)
+    neighborhood: {dist: choice, values: [topological, metric]}   # A (9.2)
+    n_c: {dist: choice, values: [5, 6, 7, 8]}        # A (9.2)
+    r_c_m: {dist: uniform, low: 3, high: 10}         # A (9.2)
+    speed_control: {dist: choice, values: [stiff, marginal]}   # A (9.2; Ergebnisse getrennt berichten)
+    eta_h: {dist: uniform, low: 0, high: 3}          # A (offener Punkt 15)
+    tau0_s: {dist: uniform, low: 0, high: 0.4}       # A (Größenordnung aus Nagy et al. 2010 prüfen)
+    J_per_s: 4.0                    # K, Platzhalter
+    sigma: 2.0                      # K, Platzhalter
+    kappa_s_per_s: 2.0              # K, Platzhalter
+    u_star_mps: 1.0                 # K, Platzhalter
+    beta_mps2: 1.0                  # K, Platzhalter
+    r0_m: 1.5                       # K, Platzhalter (Tauben/Möwen, offener Punkt 15)
+    r_w_m: 0.5                      # K, Platzhalter
+    r_hc_m: 0.2                     # A (wie B1)
+    c_comp: {dist: uniform, low: 0.0, high: 0.5}     # A (wie B1)
+    tau_est_s: {dist: uniform, low: 2, high: 10}     # A (wie B1)
+
+drones:                             # D1, D2, D2-c, D3 (4.5) und Prioren 9.3
+  r_c_m: {dist: uniform, low: 20, high: 100}         # A (Funk-/Wahrnehmungsradius)
+  spacing_m: {dist: uniform, low: 3, high: 15}       # A (offener Punkt 17)
+  dense_factor: {dist: uniform, low: 1.0, high: 1.5} # D (K-Dichte, 8.6)
+  kappa_s_per_s: {dist: uniform, low: 0.2, high: 2.0}   # A
+  sigma_d: 0.1                      # A (Prozessrauschen der Drohnen; in 9.3 nicht festgelegt)
+  c_comp: 1.0                       # D (GPS-Geschwindigkeitsregelung, 4.1)
+  tau_est_s: {dist: uniform, low: 1, high: 10}      # A
+  D1:                               # Vorfaktor τ_v statt Δt_c (Entscheidung 2026-10-11, P0-Bericht Punkt 3)
+    c_a_per_s: {dist: uniform, low: 0.5, high: 3.0}     # A (Ausrichtung; in 9.3 nicht festgelegt)
+    c_c_per_s2: {dist: uniform, low: 0.02, high: 0.2}   # A (Zusammenhalt; in 9.3 nicht festgelegt)
+    c_s_factor: 1.0                 # D (c_s = Faktor·c_c·r_s²: Paar-Gleichgewicht bei r_s)
+  D2:
+    a: 5.0                          # L (Olfati-Saber 2006, Simulationsteil; prüfen, offener Punkt 5; SwarmLab: a = 1)
+    b: 5.0                          # L (Olfati-Saber 2006; SwarmLab: b = 5)
+    h: 0.2                          # L (Olfati-Saber 2006; SwarmLab delta = 0.2)
+    eps: 0.1                        # L (Olfati-Saber 2006, σ-Norm; prüfen)
+    c1_per_s2: 0.04                 # A (Navigation Position)
+    c2_per_s: 0.4                   # A (Navigation Geschwindigkeit; kritisch gedämpft c2 = 2√c1)
+    # Reichweite (Entscheidung 2026-10-11): je Lauf gezogen, getrennt ausgewertet.
+    # local: r = 1,2·d (Olfati-Saber 2006); knn: r = r_c, nur 10 nächste (SwarmLab).
+    # Wörtlich nach 4.5 wäre "literal" (r = r_c ohne Begrenzung; Rauchlauf: Schwarm gestaucht).
+    range_mode: {dist: choice, values: [local, knn]}   # D
+    kappa_range: 1.2                # L (Olfati-Saber 2006: r = κ d, κ = 1,2)
+    knn: 10                         # L (SwarmLab param_swarm.m: max_neig = 10)
+  DF:                               # O5: Formation/Wegpunkte ohne Nachbarkopplung (Lichtshow, einzeln gesteuert)
+    k_form_per_s: {dist: uniform, low: 0.3, high: 1.5}   # A (Positionsverstärkung der Formationsregelung)
+  D3:
+    p_rep_per_s: 0.03               # L (SwarmLab param_vasarhelyi.m)
+    r0_fric_m: 85.3                 # L (SwarmLab param_vasarhelyi.m = Optimum Vásárhelyi 2018, prüfen)
+    C_fric: 0.05                    # L (SwarmLab)
+    v_fric_mps: 0.63                # L (SwarmLab)
+    p_fric_per_s: 3.2               # L (SwarmLab)
+    a_fric_mps2: 4.16               # L (SwarmLab)
+    attraction: true                # D (Entscheidung 2026-10-11): SwarmLab-Anziehung jenseits r0_rep; Original ohne
+
+realism:                            # Realismus-Schicht (4.7), Prioren 9.3
+  f_ctrl_hz: {dist: choice, values: [10, 20, 50]}    # A
+  tau_d_s: {dist: loguniform, low: 0.02, high: 0.5}  # A
+  sigma_g_m: {dist: loguniform, low: 0.02, high: 2.0}   # A (RTK … Standard-GPS)
+  sigma_gv_mps: {dist: loguniform, low: 0.02, high: 0.5}   # A
+  tau_g_s: {dist: uniform, low: 1, high: 30}         # A
+  p_loss: {dist: uniform, low: 0.0, high: 0.3}       # A
+  tau_v_s: {dist: uniform, low: 0.1, high: 0.5}      # A
+  a_max_mps2: {dist: uniform, low: 4, high: 10}      # A
+  v_max_mps: {dist: uniform, low: 15, high: 25}      # A
+  max_packet_age_s: 1.0             # D (älteste Pakete werden auf 1 s Alter begrenzt)
+
+environment:
+  wind: none                        # D (9.4: in P1 und P2 kein Wind)
+
+sensor:                             # idealer Sensor (6.1, 9.6)
+  type: ideal
+  sigma_pos_m: 0.0                  # D (P1-Grundfall perfekt; Varianten {0, 0.05, 0.2, 1} m, A)
+  f_cam_hz: 10                      # D (Grundfall; Varianten {10, 30, 80} Hz, A)
+  q_frames: 1                       # A
+  p_miss: 0.0                       # D (P1-Grundfall; Variante [0, 0.1], A)
+
+observables:
+  mode_removal: [A7, M, A12]        # D (7.1; A7 primär)
+  primary: {S: T_nn, M: T_s, L: T_s}   # D (7.4)
+  dr_m: 1.0                         # D (7.2)
+  max_n_all_pairs: 5000             # D (darüber Paar-Stichprobe, 7.2)
+  n_pair_samples: 2000000           # D
+  min_pairs_per_bin: 1              # D
+  frame_stride: 1                   # D
+  nn_bias_table: null               # wird mit scripts/build_nn_bias_table.py erzeugt (7.5)
+  los_class_edges: [0.0, 0.5, 0.85, 1.0]   # D (7.4)
+
+nullmodels:
+  matern_nu: 0.5                    # A (Glattheit der Matérn-Kovarianz; 0.5 = exponentiell)
+  c_s: 1.0                          # A (N2: ℓ_s = c_s·L)
+  c_perp: 1.0                       # A (N2: ℓ_⊥ = c_⊥·L)
+  cholesky_max_n: 4000              # D
+  n_fourier_features: 4096          # D

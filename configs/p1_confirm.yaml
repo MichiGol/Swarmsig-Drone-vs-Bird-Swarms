@@ -1,0 +1,12 @@
+# Bestätigungslauf zu P1_small_v1 (Vorregistrierung: reports/P1_confirm_prereg.md).
+# Gleiches Modell, gleiche Einstellungen, neue Zufallszahlen; nur N = 20, 30, 50.
+base: p1_small.yaml
+
+experiment:
+  id: P1_confirm_v1
+  seed: 20261013                    # D (neu; P1_small_v1 nutzte 20261012)
+  sweep_value: 0.1                  # σ_d des Basislaufs (für die Sensitivitätsauswertung)
+
+scenario:
+  # N = 10 und 100 auf 0 gesetzt (die Basis-Config wird rekursiv gemischt, nicht ersetzt)
+  N_plan: {10: 0, 20: 300, 30: 300, 50: 300, 100: 0}

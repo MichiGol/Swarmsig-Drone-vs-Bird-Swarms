@@ -1,0 +1,21 @@
+# P3-Nachtrag „Messrauschen des Sensors“ (O2, Entscheidung Projektleitung 2026-10-12).
+# Dieselben Designpunkte und Zufallszahlen wie P3_wind_v1 (N = 50, mit Wind). Jede simulierte
+# Flugbahn wird zusätzlich mit Positionsrauschen σ_pos und Zeitfenster q der Geschwindigkeitsschätzung
+# ausgewertet (f_cam = 10 Hz: q = 1 → ±0,1 s, q = 5 → ±0,5 s). Die Grundauswertung (σ_pos = 0, q = 1)
+# reproduziert P3_wind_v1. Vorregistrierung: reports/P3_sensor_prereg.md
+base: p3_wind.yaml
+
+experiment:
+  id: P3_sensor_v1
+  controls: [K0]
+  only_N: [50]                      # D (konfirmatorische Gruppengröße; Budget)
+
+sensor:
+  variants:                         # A (Architektur 9.6: σ_pos ∈ {0; 0,05; 0,2; 1} m; hier ohne 1 m, dazu 0,01 m)
+    - {label: s00q5, sigma_pos_m: 0.00, q_frames: 5}
+    - {label: s01q1, sigma_pos_m: 0.01, q_frames: 1}
+    - {label: s01q5, sigma_pos_m: 0.01, q_frames: 5}
+    - {label: s05q1, sigma_pos_m: 0.05, q_frames: 1}
+    - {label: s05q5, sigma_pos_m: 0.05, q_frames: 5}
+    - {label: s20q1, sigma_pos_m: 0.20, q_frames: 1}
+    - {label: s20q5, sigma_pos_m: 0.20, q_frames: 5}

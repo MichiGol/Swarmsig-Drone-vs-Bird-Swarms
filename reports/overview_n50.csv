@@ -1,0 +1,9 @@
+Bedingung,D1,D2,D3
+"P1 explorativ, ohne Wind",0.89,0.9,0.99
+"P1 Bestätigung, ohne Wind",0.85,0.89,0.99
+P3 ohne Wind (gleiche Situationen),0.88,0.89,0.98
+P3 mit Herbstwind,0.88,0.88,0.99
+"Wind + Eigenrauschen σ_d = 0,3",0.79,0.86,0.96
+"Wind + Eigenrauschen σ_d = 1,0",0.56,0.75,0.75
+Wind + RTK-Positionierung,0.77,0.89,0.97
+Wind + Standard-GPS,0.74,0.75,0.97

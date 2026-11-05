@@ -1,0 +1,26 @@
+# P3 Wind für kleine Schwärme (Entscheidung 2026-10-11): gleiches Modell wie P1_small_v1 /
+# P1_confirm_v1, dazu reale Herbstwinde und von-Kármán-Turbulenz (5.2, 5.3, 4.1).
+# Wetter: je Designpunkt ein realer 10-Minuten-Zustand (DWD, Flughäfen Hamburg, Bremen, Hannover,
+# BER; September–November 2010–2025, Tageslicht inkl. bürgerlicher Dämmerung), erzeugt mit
+# scripts/prepare_dwd_wind.py. Vorregistrierung: reports/P3_prereg.md.
+base: p1_small.yaml
+
+experiment:
+  id: P3_wind_v1
+  seed: 20261014                    # D (neu; P1 nutzte 20261012/20261013)
+  controls: [K0, K-Wind, K-Calm]    # D (8.6: K-Wind; K-Calm = derselbe Designpunkt ohne Wind, CRN)
+
+scenario:
+  N_plan: {10: 0, 20: 300, 30: 300, 50: 300, 100: 0}   # D (Gruppengrößen des Bestätigungslaufs)
+
+environment:
+  wind: turbulent                   # D (P3)
+  weather_table: data/processed/dwd_wind_autumn.parquet   # E (DWD-Stationsdaten statt ERA5, Entscheidung Projektleitung)
+  alpha: {dist: uniform, low: 0.1, high: 0.4}             # A (5.2, neutral bis stabil)
+  turbulence_level: gust            # D: MIL-F-8785C, Niveau aus dem gemessenen Böenfaktor (Wieringa 1973)
+  I_u10_default: 0.141              # E (Median der DWD-Herbstdaten; nur ohne Böenfaktor, U10 < 2 m/s)
+  l_min_m: 1.0                      # A (kleinste Wirbel ≈ Körpergröße; Messung mittelt ohnehin über 0,2 s)
+  k_lo_L: 0.05                      # D (Energie unterhalb vernachlässigbar)
+  shells_per_decade: 8              # D (Konvergenz: tests/test_wind.py)
+  dirs_per_shell: 2                 # D
+  hold_s: 0.005                     # D (Windauswertung höchstens alle 5 ms, dazwischen gehalten)
